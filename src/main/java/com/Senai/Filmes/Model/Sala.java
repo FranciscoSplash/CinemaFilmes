@@ -8,6 +8,7 @@ import lombok.NoArgsConstructor;
 
 import java.beans.ConstructorProperties;
 import java.util.ArrayList;
+import java.util.List;
 import java.util.UUID;
 
 
@@ -28,5 +29,5 @@ public class Sala {
     private Integer totalAcentos;
 
     @OneToMany(mappedBy = "sala", cascade=CascadeType.ALL,orphanRemoval = true)
-    private List<Assento>Assentos=new ArrayList<>();
+    private List<Assento> Assentos=new ArrayList<>();
 }
