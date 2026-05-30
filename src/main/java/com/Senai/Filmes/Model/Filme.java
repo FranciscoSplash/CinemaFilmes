@@ -35,4 +35,6 @@ public class Filme {
     @NotNull(message = "O campo minutos é obrigatorio")
     @Min(value=1, message="A duracao deve ser maior que 0")
     private Integer duracaoMinutos;
+
+
 }

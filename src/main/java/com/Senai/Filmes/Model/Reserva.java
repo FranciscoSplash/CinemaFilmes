@@ -1,9 +1,8 @@
 package com.Senai.Filmes.Model;
 
-import com.Senai.Filmes.Model.Enums.Status;
+import com.Senai.Filmes.Model.Enums.StatusReserva;
 import jakarta.persistence.*;
 import jakarta.validation.constraints.NotNull;
-import jdk.jfr.Timestamp;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 import org.hibernate.annotations.CreationTimestamp;
@@ -39,7 +38,7 @@ public class Reserva {
 
     @NotNull
     @Enumerated(EnumType.STRING)
-    private Status status;
+    private StatusReserva status;
 
     @OneToMany(mappedBy = "reserva", cascade = CascadeType.ALL, orphanRemoval = true)
     private List<ReservaAssento>assentos= new ArrayList<>();
