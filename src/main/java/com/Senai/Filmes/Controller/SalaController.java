@@ -1,23 +1,24 @@
 package com.Senai.Filmes.Controller;
 
 
+import com.Senai.Filmes.DTO.Request.SalaRequest;
 import com.Senai.Filmes.DTO.Response.SalaResponse;
 import com.Senai.Filmes.Model.Sala;
 import com.Senai.Filmes.Service.SalaService;
 import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.tags.Tag;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.CrossOrigin;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
+import java.util.UUID;
 
 @RestController
 @CrossOrigin("*")
 @RequestMapping("/api/salas")
+@Tag(name="sala", description = "Endpoint para gerencoiamento de salas")
 public class SalaController {
 
     @Autowired
@@ -27,12 +28,34 @@ public class SalaController {
     @GetMapping
     @Operation(summary = "Listar todas as salas", description = "Rota para listar todas as salas")
 
-    public ResponseEntity<List<Sala>>listarTodassalas(){
-        List<SalaResponse>sala = salaService.listarTodassalas();
+    public ResponseEntity<List<SalaResponse>> listarTodassalas(){
+        List<SalaResponse> sala = salaService.listarTodassalas();
 
         if(sala.isEmpty()){
             return new ResponseEntity<>(HttpStatus.NO_CONTENT);
         }
+        return new ResponseEntity<>(sala, HttpStatus.OK);
+    }
+
+    @GetMapping("/{id}")
+    public ResponseEntity<SalaResponse> buscarSalaporId(@PathVariable UUID id){
+        return new ResponseEntity<>(salaService.buscarSalaId(id),HttpStatus.OK);
+
+    }
+
+    @PostMapping
+    @Operation(summary = "criar Sala", description = "ROta para cadastrar a sala")
+    //@PreAuthorize("has")
+    public ResponseEntity<SalaResponse>criarSala(@RequestBody SalaRequest salaRequest){
+        return new ResponseEntity<>(salaService.cadastrarSala(salaRequest), HttpStatus.CREATED);
+    }
+    @PutMapping("/{id}")
+    public ResponseEntity<SalaResponse>atualizar(@PathVariable  UUID id, @RequestBody SalaRequest salaRequest ){
+        return new ResponseEntity<>(salaService.atualizarSala(id, salaRequest), HttpStatus.OK);
+    }
+
+    public ResponseEntity<Void> apagar(@PathVariable UUID id){
+        salaService.apagarSala(id);
         return new ResponseEntity<>(HttpStatus.OK);
     }
 }

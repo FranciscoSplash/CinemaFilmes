@@ -6,11 +6,15 @@ import com.Senai.Filmes.DTO.Response.SalaResponse;
 import com.Senai.Filmes.Model.Assento;
 import com.Senai.Filmes.Model.Sala;
 import com.Senai.Filmes.Repository.ISalaRepository;
+import jakarta.persistence.EntityNotFoundException;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
+import org.springframework.web.bind.annotation.GetMapping;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.UUID;
 
 @Service
 public class SalaService {
@@ -22,10 +26,19 @@ public class SalaService {
     //CRUD Sala
 
     //
-    public List<SalaResponse>listarTodassalas(){
+    public List<SalaResponse> listarTodassalas() {
         return salaRepository.findAll().stream().map(this::toResponse).toList();
     }
 
+
+    public SalaResponse buscarSalaId(UUID id) {
+
+        Sala sala = salaRepository.findById(id)
+                .orElseThrow(() -> new EntityNotFoundException("Sala não encontrado"));
+
+        return toResponse(sala);
+
+    }
 
     public SalaResponse cadastrarSala(SalaRequest request) {
         Sala sala = new Sala();
@@ -34,6 +47,15 @@ public class SalaService {
 
         List<Assento> assentos = gerarAssentos(sala, request.fileiras(), request.assentosPorFileira());
         sala.setAssentos(assentos);
+
+        return toResponse(salaRepository.save(sala));
+    }
+
+    public SalaResponse atualizarSala(UUID id, SalaRequest salaRequest) {
+        Sala sala = salaRepository.findById(id).orElseThrow(() -> new EntityNotFoundException("SAla não encontrafa"));
+
+        sala.setNome(salaRequest.nome());
+
 
         return toResponse(salaRepository.save(sala));
     }
@@ -60,6 +82,15 @@ public class SalaService {
                 sala.getTotalAcentos()
         );
     }
+
+    public void apagarSala(UUID id) {
+        Sala sala = salaRepository.findById(id)
+                .orElseThrow(() -> new EntityNotFoundException("Sala não encontrado"));
+
+        salaRepository.delete(sala);
+
+    }
 }
+
 
 
