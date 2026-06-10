@@ -8,6 +8,7 @@ import io.swagger.v3.oas.annotations.Operation;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -32,7 +33,9 @@ public class FilmeController {
         }
         return new ResponseEntity<>(filmes, HttpStatus.OK);
     }
+
     @GetMapping("/{id}")
+    @PreAuthorize("hasRole('ADMIN')")
     @Operation(summary = "Buscar os filmes por Id", description = "Rota buscar os filmes por Id")
     public  ResponseEntity<FilmeResponse>buscarPorId(UUID id){
         return new ResponseEntity<>(filmeService.buscarFilme(id),HttpStatus.OK);
@@ -46,12 +49,14 @@ public class FilmeController {
     }
 
     @PutMapping("/{id}")
+    @PreAuthorize("hasRole('ADMIN')")
     @Operation(summary = "Atualizar os filmes", description = "Rota para atualizar os filmes")
     public ResponseEntity<FilmeResponse>atualizarFilme(@PathVariable UUID id, @RequestBody FilmeRequest filmeRequest){
         return new ResponseEntity<>(filmeService.atualizarFilme(id, filmeRequest), HttpStatus.OK);
     }
 
     @DeleteMapping("/{id}")
+    @PreAuthorize("hasRole('ADMIN')")
     @Operation(summary = "Apagar os dados", description = "Rota para apagar os filmes")
 
     public ResponseEntity<FilmeResponse>deletar(@PathVariable UUID id){
