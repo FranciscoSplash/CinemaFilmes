@@ -10,6 +10,7 @@ import io.swagger.v3.oas.annotations.tags.Tag;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -44,16 +45,20 @@ public class SalaController {
     }
 
     @PostMapping
+    @PreAuthorize("hasRole('ADMIN')")
     @Operation(summary = "criar Sala", description = "ROta para cadastrar a sala")
     //@PreAuthorize("has")
     public ResponseEntity<SalaResponse>criarSala(@RequestBody SalaRequest salaRequest){
         return new ResponseEntity<>(salaService.cadastrarSala(salaRequest), HttpStatus.CREATED);
     }
     @PutMapping("/{id}")
+    @PreAuthorize("hasRole('ADMIN')")
     public ResponseEntity<SalaResponse>atualizar(@PathVariable  UUID id, @RequestBody SalaRequest salaRequest ){
         return new ResponseEntity<>(salaService.atualizarSala(id, salaRequest), HttpStatus.OK);
     }
 
+    @DeleteMapping("/{id}")
+    @PreAuthorize("hasRole('ADMIN')")
     public ResponseEntity<Void> apagar(@PathVariable UUID id){
         salaService.apagarSala(id);
         return new ResponseEntity<>(HttpStatus.OK);

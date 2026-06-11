@@ -13,12 +13,15 @@ import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.web.authentication.WebAuthenticationDetails;
 import org.springframework.security.web.authentication.WebAuthenticationDetailsSource;
+import org.springframework.stereotype.Component;
 import org.springframework.web.filter.OncePerRequestFilter;
 
 import java.io.IOException;
 import java.rmi.ServerException;
 import java.security.Security;
 
+
+@Component
 public class JwtFilter extends OncePerRequestFilter {
 
     @Autowired
@@ -29,7 +32,8 @@ public class JwtFilter extends OncePerRequestFilter {
 
     private UserDetailsServiceIml userDetailsServiceIml;
 
-    @Autowired
+    @Override
+
     protected  void doFilterInternal(HttpServletRequest request, HttpServletResponse response, FilterChain filterChain)
         throws ServletException, IOException{
             String authleader = request.getHeader("Authorizaton");
